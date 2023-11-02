@@ -450,22 +450,29 @@ sequence:
                 message: |-
                   entity: {{ repeat.item }}
                   device name: {{ device_attr(repeat.item, "name") }}
-                  IEEE: {{ (device_attr(repeat.item, "identifiers")|list).0.1 }}
                   payload: {{ payload }}
-        # Set Effect          
+        # Set Duration          
         - service: zwave_js.set_config_parameter
           data:
             endpoint: 0
             parameter: 99
-            bitmask: 4278190080
-            value: "{{ effect }}"
+            bitmask: 255
+            value: "{{ duration_value }}"
         # Set Color          
         - service: zwave_js.set_config_parameter
           data:
             endpoint: 0
             parameter: 99
             bitmask: 16711680
-            value: "{{ color }}"    
+            value: "{{ color_value }}"     
+        # Set Effect          
+        - service: zwave_js.set_config_parameter
+          data:
+            endpoint: 0
+            parameter: 99
+            bitmask: 4278190080
+            value: "{{ effect_value }}"
+   
             
 icon: mdi:led-on
 mode: parallel
