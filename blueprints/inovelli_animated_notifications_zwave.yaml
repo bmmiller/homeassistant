@@ -19,7 +19,6 @@ fields:
         device:
           integration: zwave_js
           manufacturer: Inovelli
-          model: VZW31-SN
         entity:
           integration: zwave_js
           domain: light
@@ -195,7 +194,9 @@ variables:
       {# Detect switches #}
       {% for area in areas.areas %}
         {% for ent in area_entities(area) %}         
-          {% set switch.entities = switch.entities + [ent|string|trim] %}
+          {% if is_device_attr(ent, 'model', 'VZM31-SN') and ent.split('.')[0] == 'light' %}
+            {% set switch.entities = switch.entities + [ent|string|trim] %}
+          {% endif %}
         {% endfor %}
       {% endfor %}
     {% endif %}
@@ -217,7 +218,9 @@ variables:
       {# Detect switches #}
       {% for device in devices.devices %}
         {% for ent in device_entities(device) %}
-          {% set switch.entities = switch.entities + [ent|string|trim] %}
+          {% if is_device_attr(ent, 'model', 'VZW31-SN') and ent.split('.')[0] == 'light' %}
+            {% set switch.entities = switch.entities + [ent|string|trim] %}
+          {% endif %}
         {% endfor %}
       {% endfor %}
     {% endif %}
@@ -238,7 +241,9 @@ variables:
       {% endif %}
       {# Detect switches #}
       {% for ent in entities.entities %}
-        {% set switch.entities = switch.entities + [ent|string|trim] %}
+        {% if is_device_attr(ent, 'model', 'VZW31-SN') and ent.split('.')[0] == 'light' %}
+          {% set switch.entities = switch.entities + [ent|string|trim] %}
+        {% endif %}
       {% endfor %}
     {% endif %}
 
