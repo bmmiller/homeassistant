@@ -458,7 +458,7 @@ sequence:
             parameter: 99
             bitmask: 255
             value: "{{ duration_value }}"
-          target: "{{ repeat.item }}"
+          target: "{{ entity_list }}"
         # Set Color          
         - service: zwave_js.set_config_parameter
           data:
@@ -466,7 +466,7 @@ sequence:
             parameter: 99
             bitmask: 16711680
             value: "{{ color_value }}"   
-          target: "{{ repeat.item }}"  
+          target: "{{ entity_list }}"  
         # Set Effect          
         - service: zwave_js.set_config_parameter
           data:
@@ -474,7 +474,7 @@ sequence:
             parameter: 99
             bitmask: 4278190080
             value: "{{ effect_value }}"
-          target: "{{ repeat.item }}"
+          target: "{{ entity_list }}"
             
 icon: mdi:led-on
 mode: parallel
