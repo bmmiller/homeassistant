@@ -458,13 +458,15 @@ sequence:
             parameter: 99
             bitmask: 255
             value: "{{ duration_value }}"
+          target: entity
         # Set Color          
         - service: zwave_js.set_config_parameter
           data:
             endpoint: 0
             parameter: 99
             bitmask: 16711680
-            value: "{{ color_value }}"     
+            value: "{{ color_value }}"   
+          target: entity  
         # Set Effect          
         - service: zwave_js.set_config_parameter
           data:
@@ -472,7 +474,7 @@ sequence:
             parameter: 99
             bitmask: 4278190080
             value: "{{ effect_value }}"
-   
+          target: entity
             
 icon: mdi:led-on
 mode: parallel
