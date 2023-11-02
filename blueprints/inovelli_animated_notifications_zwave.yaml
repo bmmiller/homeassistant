@@ -17,10 +17,10 @@ fields:
     selector:
       target:
         device:
-          integration: Z-Wave
+          integration: zwave_js
           manufacturer: Inovelli
         entity:
-          integration: Z-Wave
+          integration: zwave_js
           domain: light
   led:
     name: LED
@@ -439,33 +439,34 @@ sequence:
       for_each: "{{ entity_list }}"
       sequence:
         # Set enable_debug = true above to provide output troubleshooting information
-        #- if:
-        #    - condition: template
-        #      value_template: "{{ debug == true }}"
-        #  then:
-        #    - service: persistent_notification.create
-        #      data:
-        #        notification_id: "inovelli_animated::{{ repeat.item }}"
-        #        title: "DEBUG: inovelli_animated::{{ repeat.item }}"
-        #        message: |-
-        #          entity: {{ repeat.item }}
-        #          device name: {{ device_attr(repeat.item, "name") }}
-        #          IEEE: {{ (device_attr(repeat.item, "identifiers")|list).0.1 }}
-        #          payload: {{ payload }}
-
-        - service: zha.issue_zigbee_cluster_command
+        - if:
+            - condition: template
+              value_template: "{{ debug == true }}"
+          then:
+            - service: persistent_notification.create
+              data:
+                notification_id: "inovelli_animated::{{ repeat.item }}"
+                title: "DEBUG: inovelli_animated::{{ repeat.item }}"
+                message: |-
+                  entity: {{ repeat.item }}
+                  device name: {{ device_attr(repeat.item, "name") }}
+                  IEEE: {{ (device_attr(repeat.item, "identifiers")|list).0.1 }}
+                  payload: {{ payload }}
+        # Set Effect          
+        - service: zwave_js.set_config_parameter
           data:
-            ieee: >
-              {{ (device_attr(repeat.item, "identifiers")|list).0.1 }}
-            endpoint_id: 1
-            cluster_id: 64561
-            cluster_type: in
-            command: >
-              {{ iif(led_value == -1, 1, 3) }}
-            command_type: server
-            params: "{{ payload }}"
-            manufacturer: 4655
-
+            endpoint: 0
+            parameter: 99
+            bitmask: 4278190080
+            value: "{{ effect }}"
+        # Set Color          
+        - service: zwave_js.set_config_parameter
+          data:
+            endpoint: 0
+            parameter: 99
+            bitmask: 16711680
+            value: "{{ color }}"    
+            
 icon: mdi:led-on
 mode: parallel
 max_exceeded: silent
