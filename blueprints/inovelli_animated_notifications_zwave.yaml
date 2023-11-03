@@ -251,14 +251,14 @@ variables:
 
   # Convert LED number to value
   leds:
-    "all": -1
-    "led 1": 0
-    "led 2": 1
-    "led 3": 2
-    "led 4": 3
-    "led 5": 4
-    "led 6": 5
-    "led 7": 6
+    "all": 99
+    "led 1": 64
+    "led 2": 69
+    "led 3": 74
+    "led 4": 79
+    "led 5": 84
+    "led 6": 89
+    "led 7": 94
   led: '{{ led|default("all") }}'
   led_value: >-
     {% if led|int(default=-2) == -2 %}
@@ -451,33 +451,17 @@ sequence:
                   entity: {{ repeat.item }}
                   device name: {{ device_attr(repeat.item, "name") }}
                   payload: {{ payload }}
-        # Set Duration          
-        - service: zwave_js.set_config_parameter
+        - service: zwave_js.bulk_set_partial_config_parameters
           target:
             entity_id: "{{ repeat.item }}"
           data:
             endpoint: 0
-            parameter: 99
-            bitmask: 255
-            value: "{{ duration_value }}"
-        # Set Color          
-        - service: zwave_js.set_config_parameter
-          target:
-            entity_id: "{{ repeat.item }}"
-          data:
-            endpoint: 0
-            parameter: 99
-            bitmask: 16711680
-            value: "{{ color_value }}"   
-        # Set Effect          
-        - service: zwave_js.set_config_parameter
-          target:
-            entity_id: "{{ repeat.item }}"
-          data:
-            endpoint: 0
-            parameter: 99
-            bitmask: 4278190080
-            value: "{{ effect_value }}"
+            parameter: "{{ led_value }}"
+            value:
+              0xff: "{{ duration_value }}"
+              0xff00: "{{ level }}"
+              0xff0000: "{{ color_value }}" 
+              0xff000000: "{{ effect_value }}"
             
 icon: mdi:led-on
 mode: parallel
